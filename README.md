@@ -8,6 +8,26 @@ Context Taxonomy is a learning and debugging companion for [DeepSeek Harness](ht
 
 _Recorded from a real DeepSeek-V4-Flash run on the official Harness `0.1.0-rc.6` Web profile—not a mock or fixture._
 
+## Quick start for existing Harness users
+
+If `dsh --version` already works and reports `0.1.0-rc.6`, install the plugin into your Web profile and start Harness with the short commands:
+
+```sh
+dsh plugin --profile web add @artificialnotimbecile/dsh-context-taxonomy@0.1.0
+dsh web
+```
+
+If `dsh web` is already running, stop and restart it after installation so the new bundle is loaded. Then create or open a Session, send an ordinary agent request, and select the **Context Taxonomy** tab. The plugin records calls made after it is installed; it cannot reconstruct older calls.
+
+If the `dsh` binary is not on your `PATH`, use `npx` as a reproducible fallback:
+
+```sh
+npx --yes @deepseek-ai/dsh@0.1.0-rc.6 plugin --profile web add @artificialnotimbecile/dsh-context-taxonomy@0.1.0
+npx --yes @deepseek-ai/dsh@0.1.0-rc.6 web
+```
+
+The longer form does not install Harness globally: `npx` runs the pinned Harness CLI from its cache. In both forms, `plugin --profile web add` modifies only the local Web profile, normally stored under `$DSH_HOME/profiles/web` or `~/.dsh/profiles/web` when `DSH_HOME` is unset.
+
 Use it when you want to answer questions such as:
 
 - What system prompt did Harness assemble for this call?
@@ -40,16 +60,9 @@ The plugin is intentionally precise about what it observes: it does **not** capt
 
 ![The lazy raw-request explorer showing the sanitized Harness logical request and its explicit non-wire disclaimer](https://raw.githubusercontent.com/ArtificialNotImbecile/dsh-context-taxonomy/codex-initial-plugin-assets/context-taxonomy-logical-request.png)
 
-## Install
+## Install from GitHub source
 
-The first release targets DeepSeek Harness `0.1.0-rc.6` exactly and supports its `web` profile only.
-
-```sh
-npx @deepseek-ai/dsh@0.1.0-rc.6 plugin --profile web add @artificialnotimbecile/dsh-context-taxonomy@0.1.0
-npx @deepseek-ai/dsh@0.1.0-rc.6 web
-```
-
-Open a Session and select the **Context Taxonomy** conversation tab. Installation is the explicit opt-in to local capture.
+The first release targets DeepSeek Harness `0.1.0-rc.6` exactly and supports its `web` profile only. Installation is the explicit opt-in to local capture.
 
 For an auditable source install, pin the release and select this repository's publishable subdirectory:
 
