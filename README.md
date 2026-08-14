@@ -58,7 +58,7 @@ npx @deepseek-ai/dsh@0.1.0-rc.6 plugin --profile web add \
   'github:ArtificialNotImbecile/dsh-context-taxonomy#v0.1.0&path:packages/dsh-context-taxonomy'
 ```
 
-Git installs execute the package's `prepare` build. pnpm 11 therefore requires an explicit `allowBuilds` entry for `@artificialnotimbecile/dsh-context-taxonomy` in `$DSH_HOME/profiles/web/pnpm-workspace.yaml`; review the pinned source before granting it. The precompiled npm release is the recommended install path.
+Git installs execute the package's `prepare` build. On the first attempt, pnpm 11 stops safely and prints the exact codeload URL + commit + workspace-path key required under `allowBuilds` in `$DSH_HOME/profiles/web/pnpm-workspace.yaml`. Review the pinned source, add that exact key, and repeat the command. A package-name-only entry is intentionally insufficient for Git dependencies. The precompiled npm release is the recommended install path.
 
 ## Data handling
 

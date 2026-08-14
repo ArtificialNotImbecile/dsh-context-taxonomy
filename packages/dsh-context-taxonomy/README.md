@@ -35,7 +35,7 @@ npx @deepseek-ai/dsh@0.1.0-rc.6 plugin --profile web add \
   'github:ArtificialNotImbecile/dsh-context-taxonomy#v0.1.0&path:packages/dsh-context-taxonomy'
 ```
 
-This runs the package's `prepare` build and requires an explicit `allowBuilds` entry in the Web profile's `pnpm-workspace.yaml`. Review the pinned source first; the precompiled npm package is the normal installation path.
+This runs the package's `prepare` build. The first attempt stops safely and prints the exact codeload URL + commit + workspace-path key pnpm 11 requires under `allowBuilds` in the Web profile's `pnpm-workspace.yaml`; review the pinned source, add that exact key, then repeat the command. A package-name-only entry is insufficient for Git dependencies. The precompiled npm package is the normal installation path.
 
 The bundle is Web-only because it uses the Web profile's storage-domain, API Gateway, client-module, and conversation-view services.
 
