@@ -1,5 +1,7 @@
 # @artificialnotimbecile/dsh-context-taxonomy
 
+English | [简体中文](https://github.com/ArtificialNotImbecile/dsh-context-taxonomy/blob/main/README.zh-CN.md)
+
 **See how DeepSeek Harness assembles each ordinary agent call:** the complete system prompt, conversation history, current prompt, tool definitions, model options, token composition, cache usage, and logical reasoning evidence.
 
 This read-only Web-profile plugin is designed for learning Harness architecture and debugging agent behavior. It captures the provider-neutral `GenerateOptions` values that reach this plugin's public `llm/stream` listener and presents them as an explorable Context Taxonomy beside the conversation. Use it to study prompt construction, compare presets, audit which tools the model could call, diagnose context growth, and understand retries without reading a Session log by hand.
@@ -7,6 +9,19 @@ This read-only Web-profile plugin is designed for learning Harness architecture 
 ![A real DeepSeek Harness session opening Context Taxonomy and inspecting the assembled context](https://raw.githubusercontent.com/ArtificialNotImbecile/dsh-context-taxonomy/codex-initial-plugin-assets/context-taxonomy-demo.gif)
 
 _Recorded from a real DeepSeek-V4-Flash run on the official Harness `0.1.0-rc.6` Web profile—not a mock or fixture._
+
+## Context Taxonomy and Harness Trajectory
+
+This plugin complements the official [**Trajectory**](https://github.com/deepseek-ai/deepseek-harness/tree/master/packages/client/ui-trajectory) view rather than replacing it. Both can show system prompts, tools, request options, and reported usage, but they answer different questions.
+
+| | Harness Trajectory | Context Taxonomy |
+| --- | --- | --- |
+| Primary question | What happened during the run, and in what order? | What context made up this logical model call? |
+| Organization | Turn/Step event ledger with User, Assistant, Tool, Subtool, retry, compaction, and timing records. | Per-call System, Conversation, Current prompt, Tools, Options, and Unclassified taxonomy. |
+| Distinct strengths | Execution flow, tool inputs/results, latency, retries, and failures. | Estimated category composition, message provenance, unexpected fields, logical reasoning checks, and sanitized canonical logical JSON. |
+| Coverage | Reconstructs official Session history, including compaction. | Records ordinary calls that reach this plugin after installation; auxiliary calls are excluded. |
+
+Use Trajectory to understand the execution story. Use Context Taxonomy to understand the anatomy of one assembled logical request and why its context looks the way it does.
 
 It does not capture a provider HTTP body, headers, endpoint, transport attempt, or delivery status. Calls that fail before LLM dispatch or are intercepted by an earlier waterfall listener are not visible.
 
