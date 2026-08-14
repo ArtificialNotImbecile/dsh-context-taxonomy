@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    name: Package (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [22.19.0, 24]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.7.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - run: pnpm run typecheck
+      - run: pnpm run test
+      - run: pnpm run build
+
+  assembled-web-profile:
+    name: Assembled Web profile
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.7.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.19.0
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - run: pnpm run pack:plugin
+      - name: Install bundle into an isolated Harness profile
+        env:
+          DSH_HOME: ${{ runner.temp }}/dsh-context-taxonomy
+        run: |
+          pnpm dlx @deepseek-ai/dsh@0.1.0-rc.6 plugin --profile web add "$GITHUB_WORKSPACE/artificialnotimbecile-dsh-context-taxonomy-0.1.0.tgz"
+          pnpm dlx @deepseek-ai/dsh@0.1.0-rc.6 --profile web --dump-config > "$RUNNER_TEMP/dsh-config.yml"
+          grep -F "@artificialnotimbecile/dsh-context-taxonomy" "$RUNNER_TEMP/dsh-config.yml"

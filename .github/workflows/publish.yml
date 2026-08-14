@@ -1,0 +1,37 @@
+name: Publish npm package
+
+on:
+  workflow_dispatch:
+    inputs:
+      dist_tag:
+        description: npm distribution tag
+        required: true
+        default: latest
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: npm-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.7.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      - run: npm install --global npm@^11.15.0
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - run: pnpm run typecheck
+      - run: pnpm run test
+      - run: pnpm run build
+      - name: Publish through npm trusted publishing
+        run: npm publish packages/dsh-context-taxonomy --ignore-scripts --access public --tag "${{ inputs.dist_tag }}"

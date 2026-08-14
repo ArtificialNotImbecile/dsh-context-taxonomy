@@ -1,0 +1,11 @@
+node_modules/
+lib/
+packages/*/lib/
+*.tgz
+.DS_Store
+.coverage/
+coverage/
+.vitest/
+.dsh-test-home/
+.playwright-mcp/
+design/*.png

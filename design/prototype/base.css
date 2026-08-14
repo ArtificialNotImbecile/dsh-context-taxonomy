@@ -1,0 +1,175 @@
+/* Context Taxonomy 原型 base:令牌、重置、演示镀铬、骨架
+ * 令牌值取自 deepseek-harness ui-theme(design-platform.css / base.css)
+ * 与 pi-desktop styles.css 的 --kind-*;暗色桶色为 ui-spec.md §3.3 的派生值。 */
+
+:root {
+  --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-code: "SF Mono", "JetBrains Mono", "Fira Code", Consolas, "Liberation Mono", Menlo, Courier, "PingFang SC", "Microsoft YaHei";
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-fast: 0.1s;
+  --dur: 0.2s;
+
+  /* 语义令牌(亮,dsw-alias 解析值) */
+  --bg-base: #ffffff;
+  --bg-soft: rgb(245, 246, 247);       /* bg-module-platform */
+  --bg-code: rgb(249, 250, 251);       /* markdown-code-block */
+  --ink: rgb(15, 17, 21);              /* label-primary */
+  --muted: rgb(53, 54, 56);            /* label-secondary */
+  --faint: rgb(97, 102, 107);          /* label-tertiary */
+  --caption: rgb(173, 178, 184);       /* label-caption */
+  --line-1: rgba(0, 0, 0, 0.04);
+  --line-2: rgba(0, 0, 0, 0.1);
+  --line-3: rgba(0, 0, 0, 0.12);
+  --hover: rgba(38, 49, 72, 0.06);
+  --active: rgba(38, 49, 72, 0.1);
+  --accent-soft: rgb(237, 243, 254);   /* deepseek-50 */
+  --business: rgb(65, 118, 230);       /* deepseek-500 */
+  --success: rgb(34, 197, 94);
+  --warn: rgb(245, 158, 11);
+  --warn-label: rgb(221, 134, 41);
+  --error: rgb(236, 19, 19);
+  --error-ink: rgb(135, 20, 20);
+  --error-soft: rgb(254, 242, 242);
+  --error-line: rgba(236, 19, 19, 0.32);
+  --skeleton: rgba(0, 0, 0, 0.04);
+
+  /* 桶色(亮,ui-spec §3.3) */
+  --kind-instructions: #55606e;
+  --kind-text: #4176e6;
+  --kind-reasoning: #0b7c86;
+  --kind-tool-call: #6b4ec8;
+  --kind-tool-definition: #a4479a;
+  --kind-tool-result: #00843a;
+  --kind-attachment: #b05a00;
+  --kind-options: #8a8a8a;
+  --kind-unknown: #c8452f;
+  /* 文字形态加深变体(对比度 5.39 / 5.10) */
+  --kind-text-ink: rgb(72, 104, 178);
+  --kind-options-ink: #6e6e6e;
+
+  /* 吸顶高度(ui-spec §3.5) */
+  --ctx-head-h: 58px;
+  --ctx-toolbar-h: 42px;
+}
+
+html[data-theme="dark"] {
+  --bg-base: rgb(21, 21, 23);          /* bluish-950 */
+  --bg-soft: rgb(35, 35, 36);          /* bluish-875 ≈ layer-1 */
+  --bg-code: rgb(27, 27, 28);          /* markdown-code-block */
+  --ink: rgb(249, 250, 251);
+  --muted: rgb(207, 211, 214);         /* bluish-300 */
+  --faint: rgb(151, 157, 166);         /* bluish-500 */
+  --caption: rgb(129, 133, 140);       /* bluish-600 */
+  --line-1: rgba(255, 255, 255, 0.06);
+  --line-2: rgba(255, 255, 255, 0.12);
+  --line-3: rgba(255, 255, 255, 0.16);
+  --hover: rgba(255, 255, 255, 0.08);
+  --active: rgba(255, 255, 255, 0.14);
+  --accent-soft: rgb(52, 65, 91);      /* deepseek-800 */
+  --business: rgb(103, 158, 254);      /* deepseek-400 */
+  --success: rgb(34, 197, 94);
+  --warn: rgb(245, 158, 11);
+  --warn-label: rgb(247, 173, 49);
+  --error: rgb(242, 90, 90);
+  --error-ink: rgb(252, 165, 165);
+  --error-soft: rgba(242, 90, 90, 0.12);
+  --error-line: rgba(242, 90, 90, 0.4);
+  --skeleton: rgba(255, 255, 255, 0.08);
+
+  --kind-instructions: #9aa5b1;
+  --kind-text: #679efe;
+  --kind-reasoning: #4cc3ce;
+  --kind-tool-call: #b197fc;
+  --kind-tool-definition: #c57fbd;
+  --kind-tool-result: #69db7c;
+  --kind-attachment: #ffa94d;
+  --kind-options: #a2a4a6;
+  --kind-unknown: #d9705a;
+  --kind-text-ink: #679efe;
+  --kind-options-ink: #a2a4a6;
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; }
+
+body {
+  color: var(--ink);
+  background: var(--bg-soft);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-synthesis: style;
+}
+
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; opacity: 0.45; }
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--business);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* ------------------------------------------------------ 演示镀铬(非产品) --- */
+
+.demo-chrome {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  padding: 8px 16px;
+  border-bottom: 1px dashed var(--line-3);
+  background: var(--bg-base);
+  font-size: 12px;
+}
+
+.demo-title { font-size: 12px; color: var(--faint); font-weight: 600; }
+
+.demo-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.demo-field { display: inline-flex; align-items: center; gap: 6px; color: var(--faint); }
+.demo-field select {
+  height: 26px; padding: 0 6px;
+  border: 1px solid var(--line-2); border-radius: 5px;
+  background: var(--bg-base); color: var(--ink); font-size: 12px;
+}
+.demo-btn {
+  height: 26px; padding: 0 10px;
+  border: 1px solid var(--line-2); border-radius: 5px;
+  background: var(--bg-base); font-size: 12px;
+}
+.demo-btn:hover:not(:disabled) { background: var(--hover); }
+.demo-width input { width: 110px; accent-color: var(--business); }
+.demo-width output { font-family: var(--font-code); font-size: 11px; min-width: 44px; }
+
+.stage {
+  display: grid;
+  justify-items: center;
+  padding: 16px 8px 40px;
+  min-width: 240px;
+}
+
+.panel-shell {
+  container-type: inline-size;
+  width: 360px;
+  min-width: 240px;
+  max-width: 720px;
+  border: 1px solid var(--line-2);
+  border-radius: 10px;
+  background: var(--bg-base);
+  overflow: clip;
+}
+
+/* ------------------------------------------------------------ 骨架(loading) --- */
+
+.skel-row { height: 12px; margin: 8px 12px; border-radius: 4px; background: var(--skeleton); }
+.skel-row.w60 { width: 60%; }
+.skel-row.w35 { width: 35%; }
+.skel-row.w80 { width: 80%; }

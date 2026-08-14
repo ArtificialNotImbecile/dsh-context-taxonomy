@@ -1,0 +1,12 @@
+- insert:
+    - id: context-taxonomy
+      name: '@artificialnotimbecile/dsh-context-taxonomy'
+      config:
+        root: !!js dshHomePath('context-taxonomy')
+        captureContent: sanitized
+        retentionDays: 30
+        maxCapturesPerSession: 200
+        maxStoredBytes: 536870912
+        maxCaptureBytes: 16777216
+        maxPendingCaptures: 64
+        extraRedactKeyPatterns: []
