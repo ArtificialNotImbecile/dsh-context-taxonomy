@@ -10,13 +10,27 @@ _Recorded from a real DeepSeek-V4-Flash run on the official Harness `0.1.0-rc.6`
 
 It does not capture a provider HTTP body, headers, endpoint, transport attempt, or delivery status. Calls that fail before LLM dispatch or are intercepted by an earlier waterfall listener are not visible.
 
-## Install
+## Quick start for existing Harness users
 
-The package targets DeepSeek Harness `0.1.0-rc.6` exactly.
+The package targets DeepSeek Harness `0.1.0-rc.6` exactly. If `dsh --version` already works and reports that version, install the plugin and restart the Web profile with the short commands:
 
 ```sh
-npx @deepseek-ai/dsh@0.1.0-rc.6 plugin --profile web add @artificialnotimbecile/dsh-context-taxonomy@0.1.0
+dsh plugin --profile web add @artificialnotimbecile/dsh-context-taxonomy@0.1.0
+dsh web
 ```
+
+If the `dsh` binary is not on your `PATH`, use the pinned CLI through `npx`:
+
+```sh
+npx --yes @deepseek-ai/dsh@0.1.0-rc.6 plugin --profile web add @artificialnotimbecile/dsh-context-taxonomy@0.1.0
+npx --yes @deepseek-ai/dsh@0.1.0-rc.6 web
+```
+
+If Harness is already running, restart it after installation. Then create or open a Session, send an ordinary agent request, and select the **Context Taxonomy** tab. The plugin records calls made after installation and cannot reconstruct older calls. Installation modifies only the local Web profile, normally under `$DSH_HOME/profiles/web` or `~/.dsh/profiles/web` when `DSH_HOME` is unset.
+
+The bundle is Web-only because it uses the Web profile's storage-domain, API Gateway, client-module, and conversation-view services. New ordinary agent-loop calls are followed automatically; selecting an older call pins the view until **Jump to latest** is used.
+
+## Other installation paths
 
 For local development, pack the repository and install the resulting tarball:
 
@@ -36,10 +50,6 @@ npx @deepseek-ai/dsh@0.1.0-rc.6 plugin --profile web add \
 ```
 
 This runs the package's `prepare` build. The first attempt stops safely and prints the exact codeload URL + commit + workspace-path key pnpm 11 requires under `allowBuilds` in the Web profile's `pnpm-workspace.yaml`; review the pinned source, add that exact key, then repeat the command. A package-name-only entry is insufficient for Git dependencies. The precompiled npm package is the normal installation path.
-
-The bundle is Web-only because it uses the Web profile's storage-domain, API Gateway, client-module, and conversation-view services.
-
-Open a Session and select the **Context Taxonomy** conversation tab. New ordinary agent-loop calls are followed automatically; selecting an older call pins the view until **Jump to latest** is used.
 
 ## Configuration
 
