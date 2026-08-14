@@ -1,0 +1,25 @@
+/* Context Taxonomy 原型 responsive:容器查询(240px 起)与 reduced-motion。
+ * 面板可独立于视口拖宽,断点 keyed off 容器而非视口(ui-spec §7)。 */
+
+@container (max-width: 320px) {
+  .ctx { --ctx-head-h: 82px; }              /* 切换器独占一行,吸顶预算随之调整 */
+  .ctx-head { height: var(--ctx-head-h); overflow: hidden; }
+  .ctx-head-id { flex-wrap: wrap; }
+  .ctx-switcher { max-width: 100%; margin-left: 0; }
+  .ctx-item-tokens,                          /* 窄容器下 tokens 列与组占比让位 */
+  .ctx-group-head .g-pct { display: none; }
+}
+
+@container (max-width: 260px) {
+  .ctx-legend .l-pct { display: none; }      /* 图例保留色块、名称、数值 */
+  .ctx-legend button { grid-template-columns: 8px minmax(0, 1fr) auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .ctx-dot[data-state="ongoing"] { animation: none; }  /* 静态蓝点替代脉冲 */
+}

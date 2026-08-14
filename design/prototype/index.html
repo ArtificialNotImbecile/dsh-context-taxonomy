@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Context Taxonomy 交互原型 · DeepSeek Harness</title>
+<link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="components.css">
+<link rel="stylesheet" href="responsive.css">
+</head>
+<body>
+
+<!-- 演示镀铬:仅用于原型,不属于产品 UI / Demo chrome: prototype only, not product UI -->
+<header class="demo-chrome" id="demoChrome">
+  <strong class="demo-title" data-i18n="demo.title">Context Taxonomy 交互原型(非生产 UI)</strong>
+  <div class="demo-controls">
+    <label class="demo-field">
+      <span data-i18n="demo.lang">语言</span>
+      <select id="demoLang">
+        <option value="zh">中文</option>
+        <option value="en">English</option>
+      </select>
+    </label>
+    <label class="demo-field">
+      <span data-i18n="demo.theme">主题</span>
+      <select id="demoTheme">
+        <option value="auto" data-i18n="demo.themeAuto">跟随系统</option>
+        <option value="light" data-i18n="demo.themeLight">亮色</option>
+        <option value="dark" data-i18n="demo.themeDark">暗色</option>
+      </select>
+    </label>
+    <label class="demo-field">
+      <span data-i18n="demo.state">演示状态</span>
+      <select id="demoState"></select>
+    </label>
+    <button type="button" class="demo-btn" id="demoAppend" data-i18n="demo.append">模拟新调用</button>
+    <label class="demo-field demo-width">
+      <span data-i18n="demo.width">面板宽度</span>
+      <input type="range" id="demoWidth" min="240" max="720" step="10" value="360">
+      <output id="demoWidthOut">360px</output>
+    </label>
+  </div>
+</header>
+
+<main class="stage">
+  <div class="panel-shell" id="panelShell">
+    <div class="ctx" id="panel" role="region" aria-label="上下文分类"></div>
+  </div>
+</main>
+
+<!-- 播报区 / live regions -->
+<div class="visually-hidden" aria-live="polite" id="live"></div>
+<div class="visually-hidden" role="alert" id="liveAlert"></div>
+
+<script src="app.js"></script>
+</body>
+</html>

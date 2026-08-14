@@ -1,0 +1,6 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./packages/dsh-context-taxonomy/tsconfig.client.json" }
+  ]
+}
