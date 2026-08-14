@@ -1,5 +1,7 @@
 # DSH Context Taxonomy
 
+English | [简体中文](README.zh-CN.md)
+
 > **See how DeepSeek Harness builds the context for every ordinary agent call.** Inspect the complete system prompt, conversation history, current prompt, tool definitions, model options, token composition, cache usage, and reasoning evidence in one explorable view.
 
 Context Taxonomy is a learning and debugging companion for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness). It turns the provider-neutral logical request at Harness's public `llm/stream` dispatch layer into an inspectable taxonomy, then keeps the result beside the conversation in a dedicated **Context Taxonomy** tab.
@@ -7,6 +9,21 @@ Context Taxonomy is a learning and debugging companion for [DeepSeek Harness](ht
 ![A real DeepSeek Harness session opening Context Taxonomy and inspecting the assembled system prompt, messages, tools, options, and token composition](https://raw.githubusercontent.com/ArtificialNotImbecile/dsh-context-taxonomy/codex-initial-plugin-assets/context-taxonomy-demo.gif)
 
 _Recorded from a real DeepSeek-V4-Flash run on the official Harness `0.1.0-rc.6` Web profile—not a mock or fixture._
+
+## How this differs from Harness Trajectory
+
+Context Taxonomy complements the official [**Trajectory**](https://github.com/deepseek-ai/deepseek-harness/tree/master/packages/client/ui-trajectory) view; it does not replace it. The two views deliberately overlap on system prompts, tool definitions, request options, and reported token usage, but organize that evidence around different questions.
+
+| | Harness Trajectory | Context Taxonomy |
+| --- | --- | --- |
+| Primary question | What happened during the agent run, and in what order? | What context made up this particular logical model call? |
+| Organization | A Turn/Step event ledger covering User, Assistant, Tool, Subtool, retries, compaction, and timing. | A per-call snapshot divided into System, Conversation, Current prompt, Tools, Options, and Unclassified sections. |
+| Best at | Following execution flow, inspecting tool inputs/results, diagnosing latency, and locating failures or retries. | Explaining prompt composition, context growth, exposed tool schemas, message provenance, and unexpected logical-request fields. |
+| Context analysis | Shows the recorded prompt, tools, options, usage, and prompt changes alongside the execution ledger. | Adds estimated composition by category, `MessageSource.kind` / `ContextForm` provenance, unclassified-field surfacing, a logical reasoning-retention check, and sanitized canonical JSON. |
+| Coverage and history | Reconstructs the Session timeline, including compaction, from official Session data. | Observes ordinary agent-loop calls that reach this plugin's `llm/stream` listener; it excludes auxiliary calls and cannot reconstruct calls made before installation. |
+| Storage | Uses the official Session data already retained by Harness. | Keeps a separately retained, sanitized sidecar so each observed logical call remains independently inspectable. |
+
+Use **Trajectory** when you need the execution story: model responses, tool calls, nested work, timing, retries, and compaction. Use **Context Taxonomy** when you need the request anatomy: why a call had this prompt, which context and tools were exposed, where its estimated input composition came from, or which fields do not fit the expected taxonomy. Using both gives the most complete debugging and learning view.
 
 ## Quick start for existing Harness users
 
