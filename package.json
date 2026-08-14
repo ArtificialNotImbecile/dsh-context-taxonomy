@@ -12,7 +12,7 @@
     "build:host": "pnpm --filter @artificialnotimbecile/dsh-context-taxonomy build:host",
     "build:client": "pnpm --filter @artificialnotimbecile/dsh-context-taxonomy build:client",
     "clean": "rimraf packages/dsh-context-taxonomy/lib *.tsbuildinfo packages/dsh-context-taxonomy/*.tsbuildinfo",
-    "typecheck": "tsc -b tsconfig.host.json && tsc -b tsconfig.client.json",
+    "typecheck": "pnpm run build:host && tsc -b tsconfig.client.json",
     "test": "vitest run",
     "test:watch": "vitest",
     "pack:plugin": "pnpm --filter @artificialnotimbecile/dsh-context-taxonomy pack --pack-destination \"$PWD\""
